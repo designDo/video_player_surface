@@ -1,7 +1,4 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 class VideoPlayPage extends StatefulWidget {
@@ -17,47 +14,38 @@ class _VideoPlayPageState extends State<VideoPlayPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('play'),
+        actions: [
+          ElevatedButton(
+              onPressed: () {
+                SystemChrome.setPreferredOrientations([
+                  DeviceOrientation.landscapeLeft,
+                  DeviceOrientation.landscapeRight
+                ]);
+              },
+              child: const Text('Full Screen')),
+          const SizedBox(
+            width: 16,
+          ),
+          ElevatedButton(
+              onPressed: () {
+                SystemChrome.setPreferredOrientations([
+                  DeviceOrientation.portraitUp,
+                  DeviceOrientation.portraitDown
+                ]);
+              },
+              child: const Text('Exit Full Screen'))
+        ],
       ),
       body: Container(
         color: Colors.redAccent,
         child: Center(
-          child: OverflowBox(
-            maxWidth: MediaQuery.of(context).size.width + 1,
-            maxHeight: 200,
-            child: _surface(),
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: 250,
+            child: const AndroidView(viewType: 'video_player'),
           ),
         ),
       ),
     );
-  }
-
-  Widget _surface() {
-    return PlatformViewLink(
-        surfaceFactory: (context, controller) {
-          return AndroidViewSurface(
-            controller: controller as AndroidViewController,
-            gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
-            hitTestBehavior: PlatformViewHitTestBehavior.opaque,
-          );
-        },
-        onCreatePlatformView: (params) {
-          return PlatformViewsService.initSurfaceAndroidView(
-            id: params.id,
-            viewType: 'video_player',
-            layoutDirection: TextDirection.ltr,
-            creationParams: {},
-            creationParamsCodec: const StandardMessageCodec(),
-            onFocus: () {
-              params.onFocusChanged(true);
-            },
-          )
-            ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
-            ..create();
-        },
-        viewType: 'video_player');
-  }
-
-  Widget _vd() {
-    return const AndroidView(viewType: 'video_player');
   }
 }
