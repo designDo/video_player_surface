@@ -15,10 +15,8 @@ class SurfaceViewFactory extends PlatformViewFactory {
 
   @Override
   public PlatformView create(Context context, int id, Object args) {
-    // 创建SurfaceView
-    SurfaceView surfaceView = new SurfaceView(context);
 
     // 返回SurfaceView作为PlatformView
-    return new SurfaceViewPlatformView(surfaceView);
+    return new SurfaceViewPlatformView(context);
   }
 }
